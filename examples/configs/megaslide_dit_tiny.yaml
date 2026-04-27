@@ -1,0 +1,44 @@
+# Tiny MegaSlide-DiT smoke-test configuration.
+
+model:
+  frames: 2
+  in_channels: 2
+  height: 8
+  width: 8
+  patch_size: 2
+  hidden_size: 16
+  num_layers: 2
+  num_heads: 4
+  mlp_ratio: 2.0
+  dsa_kernel_size: [1, 3, 3]
+  offset_scale: 1.0
+  dropout: 0.0
+  dtype: "float32"
+  device: 0
+
+dataset:
+  path: ""
+  latent_layout: "auto"
+  synthetic_samples: 4
+
+training:
+  batch_size: 2
+  gradient_accumulation_steps: 1
+  num_steps: 2
+  learning_rate: 1.0e-4
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  seed: 42
+  diffusion_steps: 1000
+
+optimizer:
+  beta1: 0.9
+  beta2: 0.999
+  eps: 1.0e-8
+
+memory:
+  checkpoint_interval: 1
+  num_grad_slabs: 4
+
+logging:
+  log_interval: 1

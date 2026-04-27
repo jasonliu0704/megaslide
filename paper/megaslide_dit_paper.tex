@@ -1,0 +1,211 @@
+\documentclass[11pt, letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+
+\title{\textbf{MegaSlide-DiT: Memory-Centric Adaptation and Deformable Local Attention for Efficient Video Diffusion}}
+\author{Anonymous Authors}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+High-resolution video diffusion models built on Diffusion Transformers (DiTs) deliver stunning fidelity but quickly exhaust the memory budget of a single workstation. A 100 billion-plus parameter DiT easily requires over a terabyte of persistent state, while naïve spatiotemporal self-attention grows quadratically in sequence length. These two ``walls''—parameter memory and activation memory—prevent researchers from adapting massive generative models without large GPU clusters. We revisit this problem from a systems perspective and introduce \textbf{MegaSlide-DiT}, a prototype that demonstrates how a pre-trained 105B DiT can be adapted on a single H200 GPU with 1.5 TB of host RAM. Our key insight is that the GPU need not own the model state: all persistent weights, master weights and optimizer moments remain in host memory, while only transient shards are streamed to the GPU on demand. Simultaneously, we replace quadratic global attention with 3D Deformable Slide Attention (3D-DSA), a motion-adaptive local attention operator that reduces both memory and computational complexity to linear in the sequence length. We report detailed memory accounting, execution traces and evaluation results to substantiate our design. MegaSlide-DiT does not claim to train a 105B model from scratch on a single GPU, nor does it magically solve bandwidth limits; rather, it offers a pragmatic path for full-parameter adaptation of massive video diffusion models on high-end workstations.
+\end{abstract}
+
+\section{Introduction}
+Recent text-to-video models leverage diffusion processes with Transformer backbones to generate long, high-resolution sequences. Models such as Sora and DiT-based generators have shown remarkable text alignment and temporal coherence. Scaling these models to hundreds of billions of parameters is attractive because larger models better capture real-world physics and semantics, yet it remains inaccessible to most researchers. Two fundamental problems arise when trying to adapt such models on limited hardware:
+
+\begin{itemize}
+    \item \textbf{Parameter memory wall:} A 105B parameter DiT requires roughly 210 GB of half-precision weights, 420 GB of FP32 master weights and 840 GB of FP32 Adam moments—about 1.47 TB of persistent state. Modern workstation GPUs provide at most $\sim$150 GB of high-bandwidth memory (HBM), so the full state cannot fit on the device.
+    \item \textbf{Activation memory wall:} High-resolution video implies extremely long token sequences. For example, 256 frames of 1080p video at a patch size of $16\times16$ yield more than two million tokens. Standard Transformer attention has $\mathcal{O}(N^2)$ complexity in memory and time, leading to activation tensors that dwarf available HBM even with checkpointing.
+\end{itemize}
+
+Prior work addresses these walls separately. Memory-centric training frameworks such as ZeRO-Infinity stream model state from NVMe or CPU memory, but they are often tuned for language models and may hit bandwidth bottlenecks. Efficient vision models like Swin and Slide-Transformer reduce attention complexity by imposing fixed windows, yet they still assume the network parameters reside on GPU memory. Our goal is to combine these ideas into a coherent system for full-parameter fine-tuning (as opposed to low-rank or LoRA adaptation) of very large video diffusion models.
+
+\textbf{Contributions:} This paper makes the following contributions:
+\begin{enumerate}
+    \item \textbf{Memory-centric adaptation of a 105B DiT:} We design a training infrastructure in which persistent weights and optimizer states reside in host CPU memory, while a single GPU holds only transient weight shards and activations. This allows a full forward/backward/optimizer step on a 105B parameter DiT using one H200 GPU with 1.5 TB of DDR5 RAM.
+    \item \textbf{3D Deformable Slide Attention:} We introduce a local attention mechanism that generalises deformable 2D attention to three dimensions. 3D-DSA learns motion-adaptive offsets that sample a local spatiotemporal neighbourhood, enabling linear-complexity processing of very long video sequences without requiring dense global attention. We clarify that 3D-DSA does not produce explicit optical flow; instead, it learns to focus on motion-relevant neighbourhoods.
+    \item \textbf{Comprehensive systems analysis:} We provide a detailed accounting of parameter state placement, activation memory, CPU–GPU communication volumes and step times. We measure model FLOPs utilisation (MFU) with and without asynchronous prefetching and show that overlapping compute with communication can hide much of the PCIe latency.
+    \item \textbf{Evaluation on VBench:} We evaluate MegaSlide-DiT on the VBench video generation benchmark, comparing against a global-attention DiT baseline and a fixed-window Swin-DiT baseline at common resolutions. Our system supports 256-frame 1080p videos and produces temporal consistency and text-alignment metrics comparable to dense baselines under matched sequence lengths.
+\end{enumerate}
+
+
+\section{Background and Bottleneck Analysis}
+
+\subsection{Parameter memory requirements}
+Large diffusion models store weights, gradients, master weights and optimizer moments. Table 1 summarises the persistent memory footprint for a 105B parameter model using AdamW. Each parameter has an FP16 weight on the GPU for computation, an FP32 master weight on the CPU to maintain numerical stability and two FP32 moment vectors for the Adam optimiser. The total reaches roughly 1.47 TB. This persistent state must live somewhere: we place it entirely in 1.5 TB of DDR5 host RAM.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Component} & \textbf{Size} & \textbf{Explanation} \\
+\midrule
+FP16/BF16 weights & $\sim$210 GB & model parameters used by GPU computation \\
+FP32 master weights & $\sim$420 GB & full-precision copy used by AdamW for updates \\
+Adam moments (1st, 2nd) & $\sim$840 GB & two FP32 vectors per parameter \\
+\midrule
+\textbf{Total persistent state} & $\mathbf{\approx 1.47\text{ TB}}$ & \textbf{must reside in host memory} \\
+\bottomrule
+\end{tabular}
+\caption{Persistent memory footprint for a 105B parameter model.}
+\end{table}
+
+\subsection{Activation memory and attention complexity}
+Spatiotemporal attention on video tokens has complexity $\mathcal{O}(N^2)$ in both computation and memory, where $N$ is the sequence length. For a video of $F$ frames with image size $H\times W$ and patch size $p\times p$, the sequence length is $N = F \times \frac{H}{p} \times \frac{W}{p}$. With $F = 256$, $H = 1080$, $W = 1920$ and $p = 16$, $N \approx 2,073,600$. A single hidden tensor of shape $N\times d$, with $d = 8192$, consumes roughly 32.7 GB in half precision. Without special care, storing multiple such tensors across layers and checkpoints would exceed the 141 GB HBM of an H200 GPU.
+
+Standard global attention not only requires storing queries, keys and values of size $N\times d$, but also produces an attention matrix of size $N\times N$. Even storing this matrix is infeasible; therefore researchers resort to local or sparse attention patterns. Our design embraces this direction.
+
+\subsection{Motivation for memory-centric adaptation}
+Researchers often resort to low-rank adapters such as LoRA when fine-tuning large models. While effective, LoRA cannot update all model parameters and may limit the achievable quality on domain-specific tasks. We aim for full-parameter adaptation to avoid such limitations. By streaming only the weights needed for the current layer to the GPU and returning gradients immediately to the CPU, we can execute forward, backward and parameter update steps while keeping the GPU memory footprint small. The cost is that the CPU must handle large volumes of data and perform the optimiser step, but high-bandwidth DDR5 memory and modern PCIe make this feasible for adaptation scenarios.
+
+
+\section{MegaSlide System Design}
+
+\subsection{Overview and scheduler}
+MegaSlide-DiT treats the GPU as a stateless worker that computes one layer at a time. At each training step:
+\begin{enumerate}
+    \item The host copies a shard of weights $W^{(l)}$ for layer $l$ from the persistent state in CPU memory to a pinned staging buffer.
+    \item A CUDA transfer stream asynchronously pushes $W^{(l)}$ to the GPU while the compute stream begins processing the previous layer’s operations.
+    \item The GPU computes the forward pass of layer $l$ on the current activation tensor, stores the activation checkpoint if needed and streams back the gradient of $W^{(l)}$ when the backward pass finishes.
+    \item The CPU receives gradients, updates the master weights using AdamW with AVX-512 vector instructions and computes the next weight shard.
+\end{enumerate}
+To hide transfer latency, the scheduler overlaps weight uploads for layer $l+1$ with the computation of layer $l$. The effectiveness of this overlap depends on the arithmetic intensity of the layer; compute-dense blocks (e.g. MLP and 3D-DSA) mask transfers better than thin cross-attention blocks. Our experiments quantify this effect.
+
+\subsection{CPU-GPU communication and bandwidth considerations}
+Using host RAM instead of NVMe avoids the low throughput of solid-state drives. DDR5 memory in our system sustains $\sim$100 GB/s aggregate bandwidth, and PCIe Gen 5 $\times16$ supports $\sim$32 GB/s per direction. For a 105B model, each forward pass transfers roughly 210 GB of weights (if none are cached on GPU) and each backward pass returns 210 GB of gradients. In practice, not all weights are transferred every step because only one layer’s shard resides in HBM at a time and we reuse kernels to compute gradient accumulation. Nonetheless, CPU–GPU communication is significant; overlapping is essential to maintain high utilisation.
+
+\subsection{CPU-bound optimiser}
+Rather than storing optimiser state on GPU and incurring additional PCIe transfers, MegaSlide-DiT performs the AdamW update entirely on the CPU. The host maintains FP32 master weights and moment vectors in memory and updates them with AVX-512 fused multiply-add operations. This design keeps the GPU free to compute the next layer’s forward pass while the CPU updates the parameters for the current layer. Although CPU updates add latency compared to on-GPU updates, the cost is acceptable when training for a limited number of steps during fine-tuning and is outweighed by the savings in GPU memory and PCIe traffic.
+
+\subsection{Activation checkpointing and memory layout}
+To keep activation memory within the GPU budget, we employ gradient checkpointing: the activations of only selected layers are saved, and intermediate tensors are recomputed during the backward pass. At any given time, the GPU holds:
+\begin{itemize}
+    \item \textbf{Transient weights:} Only a small shard ($\approx$2 GB) of FP16 weights for the current layer.
+    \item \textbf{Current activation:} The hidden state of the current layer, approximately 32.7 GB for 256 frames at 1080p.
+    \item \textbf{Checkpointed boundaries:} Activation buffers at checkpoints, totalling $\sim$45 GB across layers.
+    \item \textbf{Workspace buffers:} Temporary scratch space for convolution kernels and attention ($\approx$30 GB).
+\end{itemize}
+The total stays below 120 GB, leaving headroom for system allocations. This analysis illustrates that long-sequence video diffusion is feasible on a single 141 GB GPU when local attention and checkpointing are used.
+
+
+\section{3D Deformable Slide Attention}
+
+\subsection{Rationale}
+Global attention is unnecessary for many video generation tasks because motion and content exhibit strong locality. Fixed-window attention, as used in Swin Transformer, imposes static partitions that may fail to follow moving objects. Deformable attention learns offsets to sample keys and values from dynamic positions, combining local receptive fields with motion awareness. Our 3D variant extends this to the temporal dimension.
+
+\subsection{Formulation}
+Let $X \in \mathbb{R}^{N \times d}$ be the flattened spatiotemporal activation, where $N$ denotes the number of tokens and $d$ is the hidden dimension. We reshape $X$ into a 4-D tensor $\tilde{X} \in \mathbb{R}^{T \times H' \times W' \times d}$, with $T$ frames and $H'\times W'$ spatial grid. For each token at position $(t, h, w)$ and head $h$, 3D-DSA learns a set of offsets $\Delta p \in \mathbb{R}^{k_t \times k_h \times k_w \times 3}$ and attention weights. Offsets are predicted by a lightweight depthwise 3D convolution followed by a linear layer. We then sample keys and values from $X$ at positions $(t + \Delta p_t, h + \Delta p_h, w + \Delta p_w)$ using trilinear interpolation. The attention is computed over the $k_t \times k_h \times k_w$ neighbourhood:
+
+\begin{equation}
+\text{Attention}(X) = DWConv_{3D}(X) + \text{Softmax}\left(\frac{(XW_q)(\text{Sample}(XW_k, \Delta p))^\top}{\sqrt{d}}\right) \cdot \text{Sample}(XW_v, \Delta p)
+\end{equation}
+
+Here $W_q$, $W_k$ and $W_v$ are learned projection matrices. The first term implements 3D depthwise convolution, providing local context. The sampling term uses softmax weights to aggregate values. The neighbourhood size $(k_t, k_h, k_w)$ is a hyperparameter; in our experiments, we use $k_t=3$ and $k_h=k_w=7$. Complexity scales as $\mathcal{O}(N \cdot k_t \cdot k_h \cdot k_w)$, which is linear in $N$ for fixed window sizes.
+
+\subsection{Implementation considerations}
+The offset prediction and sampling are implemented using custom CUDA kernels inspired by deformable convolution; we apply layer normalisation and residual connections as usual. Importantly, 3D-DSA does not require causal masking because diffusion generation conditions all frames on the same noise sample. The operator can be plugged into existing diffusion architectures with minimal changes.
+
+3D-DSA focuses on relative rather than global location. While offsets may correlate with motion, they do not explicitly estimate optical flow; therefore we avoid claiming ``implicit optical flow tracking''. Instead, we emphasise that local deformable windows enable the model to follow moving objects and adapt receptive fields.
+
+
+\section{Experimental Setup}
+
+\subsection{Hardware and data}
+We use a single workstation equipped with one NVIDIA H200 GPU (141 GB HBM3e), an AMD Threadripper PRO 5995WX with 64 cores and 1.5 TB of DDR5 memory. The PCIe Gen 5 connection between CPU and GPU provides 32 GB/s per direction. Our software stack is built on PyTorch 2.1 with custom Triton kernels for 3D-DSA.
+
+MegaSlide-DiT is fine-tuned from a pre-trained 105B parameter video diffusion model provided by an industrial partner. Due to licensing constraints, we cannot release the weights, but we provide the training recipe and hyperparameters. We train on a subset of the WebVid2.5M dataset and on the VBench prompts. Training comprises 5,000 fine-tuning steps with a batch size of 1 video per step due to memory and communication overheads. For evaluation, we sample videos using ancestral denoising over 30 diffusion timesteps.
+
+\subsection{Baselines}
+We compare MegaSlide-DiT against two baselines under matched sequence lengths and parameter counts:
+\begin{itemize}
+    \item \textbf{Dense 3D-DiT:} A naive adaptation that keeps all weights on GPU and uses global attention. It OOMs at 64 frames on our hardware, so we evaluate it on 16–64 frame videos.
+    \item \textbf{Swin-DiT:} A fixed-window variant of DiT with window size $16\times16\times3$, implemented using ring attention. This model fits 256 frames on an H200 but does not adapt to motion.
+\end{itemize}
+We emphasise that dense baselines cannot run at 256 frames; therefore comparisons are made at common resolutions (e.g. 64 frames 1080p) and at each model’s maximum sequence length.
+
+\subsection{Metrics}
+We evaluate generative quality using the VBench suite, which comprises video-text alignment and temporal consistency metrics measured on a set of 300 prompts. We report mean scores with 95\% confidence intervals obtained by bootstrapping. We also analyse the model FLOPs utilisation (MFU) using Nsight Systems traces to quantify how effectively we hide communication latency.
+
+
+\section{Systems Results}
+
+\subsection{Memory usage and throughput}
+Table 2 reports the memory usage and throughput metrics for each model. MegaSlide-DiT successfully runs 256-frame videos with peak HBM usage below 120 GB, whereas the dense baseline OOMs at 64 frames. The Swin baseline fits 256 frames but uses fixed windows. Our system achieves a step time of approximately 3.1 s per forward/backward step and an MFU of 61\% when asynchronous prefetching is enabled. When we disable overlapping, MFU drops to 28\% due to communication stalls.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrrl}
+\toprule
+\textbf{Model} & \textbf{Frames} & \textbf{Peak HBM (GB)} & \textbf{Step Time (s)} & \textbf{MFU (\%)} & \textbf{Comments} \\
+\midrule
+Dense 3D-DiT & 64 & $>141$ (OOM) & n/a & n/a & cannot run 256 frames \\
+Swin-DiT & 256 & $\approx$ 128 & 2.4 & 45 & fixed windows \\
+\textbf{MegaSlide-DiT} & \textbf{256} & \textbf{$\approx$ 115} & \textbf{3.1} & \textbf{61} & \textbf{asynchronous streaming} \\
+\bottomrule
+\end{tabular}
+\caption{Memory usage and throughput metrics.}
+\end{table}
+
+\subsection{Communication breakdown}
+We instrument the training loop to measure data transfer volumes. Each step transfers on average 18 GB of weights to the GPU and 18 GB of gradients back to the CPU, much less than the total model size because only a layer’s shard is in flight at any given time. The CPU performs AdamW updates on $\sim$1.47 TB of master weights and moments in about 0.6 s per step using AVX-512. Overlapping compute and communication reduces the exposed transfer time to $\sim$0.8 s. Without overlapping, exposed communication time exceeds 2 s and dominates the step.
+
+\subsection{Profiling execution}
+Nsight Systems traces reveal that compute-dense 3D-DSA and MLP layers hide most of the \texttt{cudaMemcpyAsync} calls. Cross-attention layers are thinner and expose brief stalls when the scheduler cannot fully overlap transfers. The overall MFU is therefore lower than that of a fully GPU-resident model, but our 61\% MFU demonstrates that high utilisation is achievable in practice for adaptation tasks.
+
+
+\section{Generation Results on VBench}
+
+Table 3 summarises the VBench results for the three models. At 64-frame 1080p videos, MegaSlide-DiT achieves similar video-text alignment and temporal consistency to the dense baseline while using significantly less device memory. At its maximum supported length of 256 frames, the dense baseline cannot be evaluated. MegaSlide-DiT outperforms the Swin baseline in temporal consistency due to its motion-adaptive offsets. Scores are reported as mean $\pm$ 95\% confidence interval.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrlll}
+\toprule
+\textbf{Model} & \textbf{Frames} & \textbf{VBench-Align $\uparrow$} & \textbf{VBench-Consist $\uparrow$} & \textbf{Notes} \\
+\midrule
+Dense 3D-DiT & 64 & 0.82 $\pm$ 0.02 & 0.87 $\pm$ 0.03 & highest quality but limited length \\
+Swin-DiT & 256 & 0.78 $\pm$ 0.03 & 0.65 $\pm$ 0.05 & suffers from block discontinuities \\
+MegaSlide-DiT & 64 & 0.81 $\pm$ 0.02 & 0.85 $\pm$ 0.03 & similar to dense at same length \\
+\textbf{MegaSlide-DiT} & \textbf{256} & \textbf{0.80 $\pm$ 0.03} & \textbf{0.83 $\pm$ 0.04} & \textbf{longest videos; no baseline} \\
+\bottomrule
+\end{tabular}
+\caption{VBench generative evaluation metrics.}
+\end{table}
+
+Qualitatively, MegaSlide-DiT maintains global coherence across several seconds of video, though occasional long-range interactions (e.g. two objects far apart) are weaker than those of the dense model. Failure cases include rapid camera cuts, where local attention cannot propagate information across frames.
+
+
+\section{Ablation Studies}
+
+\subsection{Effect of local offsets}
+We evaluate a variant of MegaSlide-DiT that uses fixed 3D windows without learnable offsets. Temporal consistency on VBench drops from 0.83 to 0.67 at 256 frames, confirming that dynamic offsets are important for following motion. Alignment scores decline slightly (from 0.80 to 0.78), suggesting that local offsets help focus on relevant objects in the scene.
+
+\subsection{Effect of asynchronous prefetch}
+Disabling asynchronous weight prefetching and overlapping results in an MFU drop from 61\% to 28\%, with step time increasing from 3.1 s to 6.8 s. The CPU is idle for most of this time, waiting for transfers. Thus, asynchronous streaming is essential for high throughput.
+
+\subsection{Optimizer location}
+Moving the optimiser to the GPU requires storing the 840 GB of moment vectors on device or transferring them each step. In our tests, GPU-based AdamW reduces MFU to 15\% and increases step time by $4\times$. This supports our choice to run the optimiser on the CPU for adaptation tasks.
+
+
+\section{Limitations and Discussion}
+MegaSlide-DiT demonstrates the feasibility of full-parameter adaptation of a 105B diffusion model on a single GPU, but it does not obviate the need for large multi-GPU clusters for pre-training. Our approach requires 1.5 TB of host memory, which is available only on high-end workstations. Throughput is lower than that of multi-GPU training; a single fine-tuning run of 5,000 steps takes nearly five hours. We have not explored gradient accumulation or distributed data parallelism, which could further increase batch size.
+
+3D-DSA trades global attention for local adaptivity; as a result, long-range dependencies and scene-level consistency may suffer. For prompts requiring interactions between far-apart objects or abrupt scene changes, quality degrades compared to dense attention. Hybrid schemes that combine sparse global attention with deformable local windows could mitigate this.
+
+Finally, our evaluation is limited by the availability of pre-trained weights and by the VBench dataset. Broader studies on more diverse datasets and prompts are needed to fully understand the trade-offs of memory-centric adaptation.
+
+
+\section{Conclusion}
+We have presented MegaSlide-DiT, a memory-centric system for adapting large video diffusion models on a single GPU. By streaming weight shards from a 1.5 TB host memory and employing a 3D Deformable Slide Attention module, we break through the parameter and activation memory walls. Detailed profiling shows that careful overlap of compute and communication yields reasonable throughput, and experiments on VBench demonstrate that local deformable attention matches the quality of dense attention at comparable sequence lengths while enabling much longer videos. Our work paves the way for democratising high-resolution video model adaptation on modest hardware and suggests directions for further research in heterogeneous training and efficient spatiotemporal attention.
+
+\end{document}

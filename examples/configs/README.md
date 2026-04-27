@@ -103,3 +103,4 @@ logging:
 - **OOM?** Reduce `batch_size`, increase `checkpoint_interval`, reduce `max_seq_len`
 - **Slow?** Use `deepspeed_adam` optimizer, install `flash-attn`, increase `num_workers`
 - **Qwen3.5 models?** Install `flash-linear-attention` + `causal-conv1d` for efficient linear attention
+- **VLM models?** Ensure `torchvision` and `einops` are installed (default with `pip install -e .`). Use `pip install -e ".[vlm]"` for extra features.
