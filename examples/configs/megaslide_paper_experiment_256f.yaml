@@ -1,0 +1,61 @@
+# MegaSlide-DiT Main Experiment Configuration (Paper Sections 5-7)
+# Full 105B model training on 256-frame 1080p videos
+
+model:
+  frames: 256
+  in_channels: 4
+  height: 1080
+  width: 1920
+  patch_size: 16
+  hidden_size: 8192
+  num_layers: 48  # 105B parameters
+  num_heads: 64
+  mlp_ratio: 4.0
+  dropout: 0.0
+  dtype: "bfloat16"
+
+  # 3D-DSA parameters (Paper Section 4.2)
+  dsa_kernel_size: [3, 7, 7]  # (k_t, k_h, k_w)
+  offset_scale: 1.0
+
+  # Diffusion settings
+  diffusion_steps: 1000
+  noise_schedule: "linear"
+
+dataset:
+  path: ""  # Set to WebVid latents path for real training
+  synthetic_samples: 100
+  latent_layout: "auto"
+
+training:
+  batch_size: 1
+  gradient_accumulation_steps: 1
+  num_steps: 5000  # Paper: 5,000 fine-tuning steps
+  learning_rate: 1.0e-5
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  seed: 42
+
+optimizer:
+  optimizer: "cpu_adamw"
+  beta1: 0.9
+  beta2: 0.999
+  eps: 1.0e-8
+
+memory:
+  checkpoint_interval: 4  # Save activation every 4 layers
+  num_grad_slabs: 12      # K-slab gradient pool
+  device: 0
+  force_cpu: false
+
+logging:
+  log_interval: 10
+  save_interval: 1000
+
+# Expected performance (Paper Section 6):
+# - Peak HBM: ~115 GB
+# - CPU RAM: ~1.47 TB
+# - Step time: 3.1s
+# - MFU: 61% (with async overlap)
+# - H2D transfer: ~18 GB/step
+# - D2H transfer: ~18 GB/step
