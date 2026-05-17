@@ -210,6 +210,131 @@ pip install deepspeed                              # for CPUAdam optimizer
 
 </details>
 
+
+
+---
+
+## MegaSlide-DiT: Video Diffusion Experiments
+
+We extend the CPU-master architecture to **video diffusion transformers**, implementing MegaSlide-DiT with 3D Deformable Slide Attention (3D-DSA). All experiments validated on a single NVIDIA H100 NVL (94 GB).
+
+### Results at a Glance
+
+| Experiment | Key Finding |
+|:-----------|:------------|
+| Memory scaling | Dense attention OOMs at 256 frames; MegaSlide scales ✅ |
+| Quality (motion data) | Learned offsets converge; Swin-DiT **diverges** ✅ |
+| Async speedup | **2.11× forward**, 1.50× overall at 28B ✅ |
+| Max scale | **33.3B model** trained on single 94 GB GPU ✅ |
+| Long training | 28.4B converges 13.9% over 100 steps (63 min) ✅ |
+
+### Quick Start: Run Experiments
+
+```bash
+# Setup
+python3 -m venv venv && source venv/bin/activate
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+pip install pyyaml numpy pytest einops psutil
+
+# Run smoke tests (any GPU, <1 min)
+PYTHONPATH=. python examples/train_megaslide_dit.py --config examples/configs/megaslide_dit_tiny.yaml
+
+# Run unit tests
+PYTHONPATH=. pytest tests/test_megaslide_video.py -v
+```
+
+### Experiment Reproduction
+
+Each experiment is self-contained. Results are in `results/`:
+
+```
+results/
+├── 01_smoke_tests/          # 3 models × 2 steps, tiny config
+├── 02_memory_scaling/       # Dense OOM at 256 frames
+├── 03_quality_ablation/     # Learned offsets vs fixed windows (256F, motion data)
+├── 04_efficiency_scaling/   # Async vs sync (171M → 12.6B)
+├── 05_max_scale/            # 19.7B, 28.4B, 33.3B experiments
+├── 06_long_training/        # 28.4B, 100 steps convergence
+└── reports/                 # Detailed analysis reports
+```
+
+#### Experiment 1: Memory Scaling (proves Dense OOMs)
+
+```bash
+# Requires: any GPU with 16+ GB
+PYTHONPATH=. python3 -c "
+from infinity.video import MegaSlideDiT, CPUMasterVideoDiT, load_megaslide_config
+from infinity.video.baselines import Dense3DDiT, SwinDiT
+# ... see results/02_memory_scaling/ for full script
+"
+```
+
+<p align="center"><img src="paper/figures/fig1_memory_scaling.png" width="600"></p>
+
+#### Experiment 2: Quality Ablation (proves offsets matter)
+
+Requires structured motion data (generated automatically):
+
+```bash
+# Generates motion dataset + trains 3 variants at 256 frames
+# See results/03_quality_ablation/ for data
+```
+
+<p align="center"><img src="paper/figures/fig3_quality_ablation.png" width="600"></p>
+
+**Result:** Swin-DiT diverges on temporal motion (loss 1.3→3.4). MegaSlide with learned offsets converges best.
+
+#### Experiment 3: Async Speedup Scaling
+
+```bash
+# Requires: GPU with 24+ GB, 200+ GB RAM for large models
+# Tests async vs sync at increasing model sizes
+```
+
+<p align="center"><img src="paper/figures/fig2_speedup_scaling.png" width="600"></p>
+
+**Result:** Speedup scales from 1.06× (171M) to 2.11× forward (28B), trending toward paper's 2.2× at 105B.
+
+#### Experiment 4: Long Training Convergence (28.4B)
+
+```bash
+# Requires: GPU with 50+ GB, 250+ GB RAM
+# 28.4B model, 100 steps on motion data, ~63 minutes
+```
+
+<p align="center"><img src="paper/figures/fig4_long_training.png" width="600"></p>
+
+**Result:** 13.9% loss reduction over 100 steps. Stable gradient norms confirm no numerical instability from CPU-master streaming.
+
+### Hardware Requirements
+
+| Experiment | GPU VRAM | RAM | Time |
+|:-----------|:---------|:----|:-----|
+| Smoke tests | 2+ GB | 8 GB | <1 min |
+| Memory scaling | 16+ GB | 32 GB | 10 min |
+| Quality ablation | 8+ GB | 16 GB | 30 min |
+| Efficiency (12.6B) | 24+ GB | 128 GB | 20 min |
+| Max scale (33.3B) | 48+ GB | 300 GB | 30 min |
+| Long training (28.4B) | 48+ GB | 250 GB | 63 min |
+| Paper scale (105B) | 141 GB (H200) | 1.5 TB | 5 hours |
+
+### Paper
+
+The full paper with experimental validation is at `paper/megaslide_dit_paper.tex`. Section 9 contains all H100 NVL results with figures.
+
+### Video Model Architecture
+
+```
+infinity/video/
+├── model.py        # MegaSlideDiT (3D-DSA + DiT blocks)
+├── attention.py    # DeformableSlideAttention3D (learned offsets, grid_sample)
+├── trainer.py      # CPUMasterVideoDiT (async streaming, double-buffered)
+├── baselines.py    # Dense3DDiT (O(N²)), SwinDiT (fixed windows)
+├── config.py       # MegaSlideConfig (YAML-driven)
+└── dataset.py      # LatentVideoDataset (synthetic + file loading)
+```
+
+
 ## Citation
 
 If you use MegaTrain in your research, please cite:
