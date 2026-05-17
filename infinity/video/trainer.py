@@ -116,6 +116,11 @@ class CPUMasterVideoDiT:
             # Deep copy first block as template
             self.gpu_blocks[i] = self._create_gpu_block_template().to(self.device)
 
+        # Detect if blocks accept video_shape argument
+        import inspect
+        block_sig = inspect.signature(self.gpu_blocks[0].forward)
+        self._block_needs_video_shape = 'video_shape' in block_sig.parameters
+
         # K-slab gradient pool (pinned CPU memory)
         self.grad_slabs = []
         self.grad_slab_free_list = queue.Queue()
@@ -197,6 +202,8 @@ class CPUMasterVideoDiT:
             for p, shape, numel in zip(cpu_params, shapes, numels):
                 grad_flat = slab_flat[offset:offset + numel]
                 grad_reshaped = grad_flat.view(shape)
+                if grad_reshaped.device != p.device:
+                    grad_reshaped = grad_reshaped.to(p.device)
 
                 if p.grad is None:
                     p.grad = grad_reshaped.clone()
@@ -261,7 +268,12 @@ class CPUMasterVideoDiT:
         x = x + self.pos_embed
 
         # Timestep conditioning
-        t_emb = self.model._get_timestep_embedding(timesteps_gpu, D, self.device)
+        import inspect
+        sig = inspect.signature(self.model._get_timestep_embedding)
+        if len(sig.parameters) > 2:  # MegaSlideDiT: (timesteps, dim, device)
+            t_emb = self.model._get_timestep_embedding(timesteps_gpu, D, self.device)
+        else:  # Baselines: (timesteps)
+            t_emb = self.model._get_timestep_embedding(timesteps_gpu)
         t_emb = self.time_embed(t_emb)
         x = x + t_emb.unsqueeze(1)
 
@@ -293,7 +305,7 @@ class CPUMasterVideoDiT:
                     self.buffer_busy_events[buffer_idx].record(self.compute_stream)
 
                     # Forward through block
-                    x = self.gpu_blocks[buffer_idx](x, video_shape, text_embeds, text_mask)
+                    x = self.gpu_blocks[buffer_idx](x, video_shape, text_embeds, text_mask) if self._block_needs_video_shape else self.gpu_blocks[buffer_idx](x, text_embeds, text_mask)
 
         checkpoints[self.num_blocks] = x.detach()
 
@@ -316,6 +328,7 @@ class CPUMasterVideoDiT:
         loss_val = loss.item()
 
         # Start backward from output
+        pred_noise.retain_grad()
         loss.backward()
 
         # Collect head gradients (norm_out + out_proj)
@@ -348,7 +361,14 @@ class CPUMasterVideoDiT:
         pred_recompute = self.out_proj(hidden_after_norm)
 
         # Backward to get grad_hidden
-        pred_recompute.backward(pred_noise.grad)
+        # Reshape pred_noise.grad [B, C, T, H, W] -> [B, N, C*p^2] (reverse unpatchify)
+        p_size = self.config.patch_size
+        grad_out = pred_noise.grad  # [B, C, T_frames, H, W]
+        B_g, C_g, T_g, H_g, W_g = grad_out.shape
+        grad_out = grad_out.view(B_g, C_g, T_g, H_g // p_size, p_size, W_g // p_size, p_size)
+        grad_out = grad_out.permute(0, 2, 3, 5, 1, 4, 6).contiguous()
+        grad_out = grad_out.view(B_g, T_g * (H_g // p_size) * (W_g // p_size), C_g * p_size * p_size)
+        pred_recompute.backward(grad_out)
         grad_hidden = hidden_before_proj.grad.detach()
 
         del hidden_before_proj, hidden_after_norm, pred_recompute
@@ -376,6 +396,8 @@ class CPUMasterVideoDiT:
                     with torch.cuda.stream(self.compute_stream):
                         hidden_recompute = self.gpu_blocks[buffer_idx](
                             hidden_recompute, video_shape, text_embeds, text_mask
+                        ) if self._block_needs_video_shape else self.gpu_blocks[buffer_idx](
+                            hidden_recompute, text_embeds, text_mask
                         )
                         recompute_cache[j] = hidden_recompute.detach()
 
@@ -401,6 +423,8 @@ class CPUMasterVideoDiT:
                     # Forward
                     layer_output = self.gpu_blocks[buffer_idx](
                         layer_input, video_shape, text_embeds, text_mask
+                    ) if self._block_needs_video_shape else self.gpu_blocks[buffer_idx](
+                        layer_input, text_embeds, text_mask
                     )
 
                     # Backward via autograd.grad
@@ -439,7 +463,7 @@ class CPUMasterVideoDiT:
         x_recompute = x_recompute.flatten(2).transpose(1, 2)
         x_recompute = x_recompute + self.pos_embed
 
-        t_emb_recompute = self.model._get_timestep_embedding(timesteps_gpu, D, self.device)
+        t_emb_recompute = self.model._get_timestep_embedding(timesteps_gpu, D, self.device) if len(sig.parameters) > 2 else self.model._get_timestep_embedding(timesteps_gpu)
         t_emb_recompute = self.time_embed(t_emb_recompute)
         x_recompute = x_recompute + t_emb_recompute.unsqueeze(1)
 

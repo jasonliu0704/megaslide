@@ -1,0 +1,100 @@
+{
+  "16": {
+    "MegaSlide": {
+      "peak_mem_gb": 6.581322752,
+      "step_time": 1.3893203735351562,
+      "status": "OK",
+      "params": 992327296
+    },
+    "Dense": {
+      "peak_mem_gb": 2.727013888,
+      "step_time": 0.4390707015991211,
+      "status": "OK",
+      "params": 641016064
+    },
+    "Swin": {
+      "peak_mem_gb": 3.063945216,
+      "step_time": 0.43642616271972656,
+      "status": "OK",
+      "params": 641016064
+    }
+  },
+  "32": {
+    "MegaSlide": {
+      "peak_mem_gb": 14.430337024,
+      "step_time": 2.0683250427246094,
+      "status": "OK",
+      "params": 994424448
+    },
+    "Dense": {
+      "peak_mem_gb": 7.016301056,
+      "step_time": 0.49617576599121094,
+      "status": "OK",
+      "params": 643113216
+    },
+    "Swin": {
+      "peak_mem_gb": 5.885234176,
+      "step_time": 0.444232702255249,
+      "status": "OK",
+      "params": 643113216
+    }
+  },
+  "64": {
+    "MegaSlide": {
+      "peak_mem_gb": 27.651304448,
+      "step_time": 4.23984956741333,
+      "status": "OK",
+      "params": 998618752
+    },
+    "Dense": {
+      "peak_mem_gb": 16.336665088,
+      "step_time": 1.1022651195526123,
+      "status": "OK",
+      "params": 647307520
+    },
+    "Swin": {
+      "peak_mem_gb": 9.014788096,
+      "step_time": 0.641549825668335,
+      "status": "OK",
+      "params": 647307520
+    }
+  },
+  "128": {
+    "MegaSlide": {
+      "peak_mem_gb": 51.614605312,
+      "step_time": 8.477586507797241,
+      "status": "OK",
+      "params": 1007007360
+    },
+    "Dense": {
+      "peak_mem_gb": 45.382856192,
+      "step_time": 3.1945934295654297,
+      "status": "OK",
+      "params": 655696128
+    },
+    "Swin": {
+      "peak_mem_gb": 12.895187968,
+      "step_time": 1.3019027709960938,
+      "status": "OK",
+      "params": 655696128
+    }
+  },
+  "256": {
+    "MegaSlide": {
+      "peak_mem_gb": 74.718401024,
+      "status": "OOM",
+      "error": "CUDA out of memory. Tried to allocate 18.38 GiB. GPU 0 has a total capacity of 93.09 GiB of which 11"
+    },
+    "Dense": {
+      "peak_mem_gb": 81.577874944,
+      "status": "OOM",
+      "error": "CUDA out of memory. Tried to allocate 32.00 GiB. GPU 0 has a total capacity of 93.09 GiB of which 5."
+    },
+    "Swin": {
+      "peak_mem_gb": 17.702445056,
+      "step_time": 2.6876726150512695,
+      "status": "OK",
+      "params": 672473344
+    }
+  }
+}

@@ -205,7 +205,21 @@ class SwinDiT(nn.Module):
     def __init__(self, config: MegaSlideConfig):
         super().__init__()
         self.config = config
-        self.window_size = (3, 16, 16)  # Paper: "window size 16×16×3"
+        # Window size must divide input dims after patching
+        T_patch = config.frames
+        H_patch = config.height // config.patch_size
+        W_patch = config.width // config.patch_size
+        # Find largest window size <= target that divides the dimension
+        def _fit(target, dim):
+            for s in range(min(target, dim), 0, -1):
+                if dim % s == 0:
+                    return s
+            return 1
+        self.window_size = (
+            _fit(3, T_patch),
+            _fit(16, H_patch),
+            _fit(16, W_patch),
+        )
 
         # Patchify (same as MegaSlideDiT)
         self.patch_embed = nn.Conv3d(

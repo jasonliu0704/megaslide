@@ -59,19 +59,21 @@ class LatentVideoDataset(Dataset):
             if self.data.ndim == 4:
                 # Single sample: C, T, H, W or T, C, H, W
                 dim0, dim1 = self.data.shape[0], self.data.shape[1]
-                # If dim0 is small (<=16) AND dim1 is larger, likely CTHW
-                # If dim1 is small (<=16) AND dim0 is larger, likely TCHW
-                if dim0 <= 16 and dim1 > 16:
+                # Use config.in_channels to disambiguate
+                if dim0 == self.config.in_channels:
+                    self.layout = "CTHW"
+                elif dim1 == self.config.in_channels:
+                    self.layout = "TCHW"
+                    self.data = self.data.permute(1, 0, 2, 3)  # TCHW -> CTHW
+                elif dim0 <= 16 and dim1 > 16:
                     self.layout = "CTHW"
                 elif dim1 <= 16 and dim0 > 16:
                     self.layout = "TCHW"
-                    self.data = self.data.permute(1, 0, 2, 3)  # TCHW -> CTHW
-                elif dim0 < dim1:
-                    # Fallback: smaller is likely channels
-                    self.layout = "CTHW"
+                    self.data = self.data.permute(1, 0, 2, 3)
                 else:
-                    self.layout = "TCHW"
-                    self.data = self.data.permute(1, 0, 2, 3)  # TCHW -> CTHW
+                    self.layout = "CTHW"
+                # Wrap single sample in batch dimension
+                self.data = self.data.unsqueeze(0)
             elif self.data.ndim == 5:
                 # Batched: B, C, T, H, W or B, T, C, H, W
                 dim1, dim2 = self.data.shape[1], self.data.shape[2]

@@ -209,7 +209,7 @@ class MegaSlideDiT(nn.Module):
         x = x + self.pos_embed
 
         # Generate and add timestep embeddings
-        t_emb = self._get_timestep_embedding(timesteps, D, device)  # [B, D]
+        t_emb = self._get_timestep_embedding(timesteps.to(device), D, device)  # [B, D]
         t_emb = self.time_embed(t_emb)  # [B, D]
         x = x + t_emb.unsqueeze(1)  # Broadcast to [B, N, D]
 

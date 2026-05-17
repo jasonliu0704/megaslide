@@ -212,6 +212,9 @@ class DeformableSlideAttention3D(nn.Module):
         h_norm = 2 * h_abs / max(H - 1, 1) - 1
         w_norm = 2 * w_abs / max(W - 1, 1) - 1
 
+        # Broadcast to common shape [T, H, W, k_t, k_h, k_w] before stacking
+        w_norm, h_norm, t_norm = torch.broadcast_tensors(w_norm, h_norm, t_norm)
+
         # Stack to [T, H, W, k_t, k_h, k_w, 3]
         grid = torch.stack([w_norm, h_norm, t_norm], dim=-1)  # Note: WHD order for grid_sample
 
@@ -229,34 +232,25 @@ class DeformableSlideAttention3D(nn.Module):
         """
         B, nh, d, T, H, W = volume.shape
         _, _, T_q, H_q, W_q, kt, kh, kw, _ = grid.shape
+        K = kt * kh * kw
 
-        # Flatten the sampling dimensions: [B, nh, T_q, H_q, W_q, kt, kh, kw, 3]
-        # -> [B * nh, T_q * H_q * W_q * kt * kh * kw, 3]
-        grid_flat = grid.reshape(B * nh, T_q * H_q * W_q * kt * kh * kw, 3)
+        # Merge B and nh: volume [B*nh, d, T, H, W], grid [B*nh, T_q*H_q*W_q*K, 3]
+        volume_flat = volume.reshape(B * nh, d, T, H, W)
+        grid_flat = grid.reshape(B * nh, T_q * H_q * W_q * K, 3)
 
-        # Reshape volume to [B * nh * d, 1, T, H, W] (treat each channel independently)
-        volume_flat = volume.reshape(B * nh * d, 1, T, H, W)
+        # grid_sample on 5D input: [N, C, D, H, W] with grid [N, D_out, H_out, W_out, 3]
+        # Reshape grid to [B*nh, T_q*H_q*W_q, K, 1, 3] to treat as 5D spatial output
+        grid_for_sample = grid_flat.view(B * nh, T_q * H_q * W_q, K, 1, 3)
 
-        # Expand grid for each channel: [B * nh * d, T_q * H_q * W_q * kt * kh * kw, 3]
-        grid_expanded = grid_flat.unsqueeze(1).expand(B * nh * d, -1, -1)  # [B*nh*d, N_samples, 3]
-
-        # Reshape grid for grid_sample: [B*nh*d, N_samples, 1, 1, 3]
-        # grid_sample expects [N, D_out, H_out, W_out, 3] for 5D input [N, C, D_in, H_in, W_in]
-        grid_for_sample = grid_expanded.view(B * nh * d, T_q * H_q * W_q, kt * kh * kw, 1, 3)
-
-        # Sample using grid_sample
-        # Input: [B*nh*d, 1, T, H, W], Grid: [B*nh*d, T_out, H_out, W_out, 3]
-        # Output: [B*nh*d, 1, T_out, H_out, W_out]
         sampled = F.grid_sample(
             volume_flat,
             grid_for_sample,
-            mode='bilinear',  # trilinear for 5D
+            mode='bilinear',
             padding_mode='border',
             align_corners=False,
-        )  # [B*nh*d, 1, T_q*H_q*W_q, kt*kh*kw, 1]
+        )  # [B*nh, d, T_q*H_q*W_q, K, 1]
 
         # Reshape back: [B, nh, d, T_q, H_q, W_q, kt, kh, kw]
-        sampled = sampled.squeeze(1).squeeze(-1)  # [B*nh*d, T_q*H_q*W_q, kt*kh*kw]
-        sampled = sampled.view(B, nh, d, T_q, H_q, W_q, kt, kh, kw)
+        sampled = sampled.squeeze(-1).view(B, nh, d, T_q, H_q, W_q, kt, kh, kw)
 
         return sampled
