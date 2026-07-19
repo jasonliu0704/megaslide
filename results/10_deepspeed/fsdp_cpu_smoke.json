@@ -1,0 +1,38 @@
+{
+  "system": "fsdp_cpu",
+  "n_params": 161124608,
+  "losses": [
+    1.34375,
+    1.5703125,
+    1.1796875,
+    1.09375,
+    1.046875
+  ],
+  "step_times": [
+    1.285483874999045,
+    0.17508848199940985,
+    0.1637938869971549,
+    0.1564683279939345,
+    0.1571132869939902
+  ],
+  "avg_step_time": 0.16311599599612236,
+  "peak_gpu_gb": 1.0002632141113281,
+  "peak_host_ram_gb": 4.117664337158203,
+  "completed_steps": 5,
+  "oom": false,
+  "scale": "smoke",
+  "config": {
+    "num_layers": 12,
+    "hidden_size": 1024,
+    "num_heads": 16,
+    "frames": 16,
+    "height": 64,
+    "width": 64,
+    "patch_size": 8,
+    "batch_size": 1
+  },
+  "host_total_ram_gb": 314.68679428100586,
+  "gpu_total_gb": 93.08538818359375,
+  "gpu_name": "NVIDIA H100 NVL",
+  "torch_version": "2.11.0+cu128"
+}

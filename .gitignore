@@ -1,0 +1,28 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+**/build/
+*.so
+*.o
+.DS_Store
+.idea/
+.vscode/
+
+# Experiment artifacts
+results/motion_dataset_256f.pt
+
+# LaTeX / arXiv build artifacts
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.blg
+paper/*.bbl
+paper/*.pdf
+paper/arxiv_submission/
+paper/megaslide_dit_arxiv_source.tar.gz
+paper/.playwright-cli/

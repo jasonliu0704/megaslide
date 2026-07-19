@@ -1,0 +1,48 @@
+{
+  "experiment": "A3: matched-config attention comparison on structured motion",
+  "config": {
+    "layers": 12,
+    "hidden": 768,
+    "heads": 12,
+    "frames": 32,
+    "size": 64,
+    "steps": 400,
+    "lr": 0.0003,
+    "n_train": 40,
+    "n_val": 10
+  },
+  "results": {
+    "megaslide_learned": {
+      "params": 142202128,
+      "train_loss_first20": 1.2934667706489562,
+      "train_loss_last20": 0.1277321796864271,
+      "val_mse": 0.11732308641076088,
+      "peak_gpu_gb": 26.59659433364868,
+      "diverged": false
+    },
+    "megaslide_fixed_offsets": {
+      "params": 142202128,
+      "train_loss_first20": 1.3710757970809937,
+      "train_loss_last20": 0.12297734506428241,
+      "val_mse": 0.12739223912358283,
+      "peak_gpu_gb": 26.045759677886963,
+      "diverged": false
+    },
+    "dense": {
+      "params": 91745536,
+      "train_loss_first20": 1.0908946812152862,
+      "train_loss_last20": 0.30786609277129173,
+      "val_mse": 0.27921612113714217,
+      "peak_gpu_gb": 5.978507995605469,
+      "diverged": false
+    },
+    "swin": {
+      "params": 91745536,
+      "train_loss_first20": 1.0795989811420441,
+      "train_loss_last20": 1.0009028643369675,
+      "val_mse": 1.0011765003204345,
+      "peak_gpu_gb": 3.640343189239502,
+      "diverged": false
+    }
+  }
+}

@@ -1,0 +1,39 @@
+# Hybrid Attention Experiment - Tiny (smoke test)
+# Register variant with minimal dimensions for CPU testing
+
+model:
+  frames: 2
+  in_channels: 2
+  height: 8
+  width: 8
+  patch_size: 2
+  hidden_size: 16
+  num_layers: 2
+  num_heads: 4
+  mlp_ratio: 2.0
+  dsa_kernel_size: [1, 1, 1]
+  offset_scale: 1.0
+  dropout: 0.0
+  dtype: "float32"
+  device: 0
+  num_registers: 4
+  register_interval: 1
+  register_gate_init: 0.0
+  attention_mode: "hybrid"
+
+dataset:
+  path: ""
+  synthetic_samples: 6
+
+training:
+  batch_size: 2
+  num_steps: 3
+  learning_rate: 1.0e-4
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  seed: 42
+  diffusion_steps: 100
+
+memory:
+  checkpoint_interval: 1
+  num_grad_slabs: 4

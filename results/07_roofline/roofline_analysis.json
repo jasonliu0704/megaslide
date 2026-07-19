@@ -1,0 +1,251 @@
+{
+  "hardware": "NVIDIA H100 NVL 94GB, 314 GB RAM, PCIe-attached host memory",
+  "effective_pcie_bandwidth_gb_s": 12.615294746249837,
+  "bandwidth_per_run": [
+    {
+      "label": "12.6B/16F",
+      "overlap_saving_s": 8.253503799438477,
+      "bw_gb_s": 12.092846968434232
+    },
+    {
+      "label": "19.7B/16F",
+      "overlap_saving_s": 3.0873544216156006,
+      "bw_gb_s": 50.48204643716972
+    },
+    {
+      "label": "28.4B/16F",
+      "overlap_saving_s": 13.365976989269257,
+      "bw_gb_s": 16.784540991811568
+    },
+    {
+      "label": "33.3B/32F",
+      "overlap_saving_s": 21.024183213710785,
+      "bw_gb_s": 12.52124869176006
+    },
+    {
+      "label": "28.4B/48F",
+      "overlap_saving_s": 18.112938463687897,
+      "bw_gb_s": 12.385720247531982
+    },
+    {
+      "label": "28.4B/64F",
+      "overlap_saving_s": 17.651724994182587,
+      "bw_gb_s": 12.709340800739616
+    }
+  ],
+  "measured_runs": [
+    {
+      "source": "results/04_efficiency_scaling/max_scale_full_experiment.json",
+      "label": "12.6B/16F",
+      "params_b": 12.62916992,
+      "tokens": 4096,
+      "transfer_gb": 99.8083584,
+      "async_step_s": 51.94449716806412,
+      "sync_step_s": 60.198000967502594,
+      "async_fwd_s": 4.349381958007813,
+      "async_bwd_s": 31.22306689453125,
+      "reported_mfu_pct": 5.70707812126258
+    },
+    {
+      "source": "results/05_max_scale/24b_16frames_experiment.json",
+      "label": "19.7B/16F",
+      "params_b": 19.699616896,
+      "tokens": 1024,
+      "transfer_gb": 155.85596928,
+      "async_step_s": 26.12940502166748,
+      "sync_step_s": 29.21675944328308,
+      "async_fwd_s": 3.9026248535156247,
+      "async_bwd_s": 10.92925625,
+      "reported_mfu_pct": 4.428668329992851
+    },
+    {
+      "source": "results/05_max_scale/28b_experiment.json",
+      "label": "28.4B/16F",
+      "params_b": 28.354200064,
+      "tokens": 1024,
+      "transfer_gb": 224.341788672,
+      "async_step_s": 26.60074371099472,
+      "sync_step_s": 39.96672070026398,
+      "async_fwd_s": 5.47656513671875,
+      "async_bwd_s": 14.6696025390625,
+      "reported_mfu_pct": 6.261294325885815
+    },
+    {
+      "source": "results/05_max_scale/33b_32frames_experiment.json",
+      "label": "33.3B/32F",
+      "params_b": 33.277639872,
+      "tokens": 2048,
+      "transfer_gb": 263.24902656,
+      "async_step_s": 42.99065285921097,
+      "sync_step_s": 64.01483607292175,
+      "async_fwd_s": 6.36522861328125,
+      "async_bwd_s": 28.358078515625,
+      "reported_mfu_pct": 9.091976821803842
+    },
+    {
+      "source": "results/05_max_scale/28b_48frames_gpu_saturated.json",
+      "label": "28.4B/48F",
+      "params_b": 28.366782976,
+      "tokens": 3072,
+      "transfer_gb": 224.341788672,
+      "async_step_s": 53.718784272670746,
+      "sync_step_s": 71.83172273635864,
+      "async_fwd_s": 6.3611490234375,
+      "async_bwd_s": 39.8442328125,
+      "reported_mfu_pct": 9.30149972214068
+    },
+    {
+      "source": "results/05_max_scale/28b_64frames_experiment.json",
+      "label": "28.4B/64F",
+      "params_b": 28.373074432,
+      "tokens": 4096,
+      "transfer_gb": 224.341788672,
+      "async_step_s": 70.09080845117569,
+      "sync_step_s": 87.74253344535828,
+      "async_fwd_s": 8.3650630859375,
+      "async_bwd_s": 53.74663828125,
+      "reported_mfu_pct": 9.505102842579655
+    }
+  ],
+  "roofline_validation": [
+    {
+      "label": "12.6B/16F",
+      "transfer_gb": 99.8083584,
+      "t_transfer_s": 7.911694526968555,
+      "measured_async_s": 51.94449716806412,
+      "measured_sync_s": 60.198000967502594,
+      "predicted_sync_s": 59.85619169503267,
+      "sync_pred_error_pct": -0.567808344091769
+    },
+    {
+      "label": "19.7B/16F",
+      "transfer_gb": 155.85596928,
+      "t_transfer_s": 12.35452460009557,
+      "measured_async_s": 26.12940502166748,
+      "measured_sync_s": 29.21675944328308,
+      "predicted_sync_s": 38.48392962176305,
+      "sync_pred_error_pct": 31.718679124801056
+    },
+    {
+      "label": "28.4B/16F",
+      "transfer_gb": 224.341788672,
+      "t_transfer_s": 17.783317249776534,
+      "measured_async_s": 26.60074371099472,
+      "measured_sync_s": 39.96672070026398,
+      "predicted_sync_s": 44.38406096077125,
+      "sync_pred_error_pct": 11.05254617619428
+    },
+    {
+      "label": "33.3B/32F",
+      "transfer_gb": 263.24902656,
+      "t_transfer_s": 20.867449540824747,
+      "measured_async_s": 42.99065285921097,
+      "measured_sync_s": 64.01483607292175,
+      "predicted_sync_s": 63.85810240003572,
+      "sync_pred_error_pct": -0.24483960672412358
+    },
+    {
+      "label": "28.4B/48F",
+      "transfer_gb": 224.341788672,
+      "t_transfer_s": 17.783317249776534,
+      "measured_async_s": 53.718784272670746,
+      "measured_sync_s": 71.83172273635864,
+      "predicted_sync_s": 71.50210152244728,
+      "sync_pred_error_pct": -0.45887972800146126
+    },
+    {
+      "label": "28.4B/64F",
+      "transfer_gb": 224.341788672,
+      "t_transfer_s": 17.783317249776534,
+      "measured_async_s": 70.09080845117569,
+      "measured_sync_s": 87.74253344535828,
+      "predicted_sync_s": 87.87412570095222,
+      "sync_pred_error_pct": 0.1499754456895103
+    }
+  ],
+  "corrected_105b_projection": {
+    "params": 105000000000.0,
+    "tokens": 16384,
+    "transfer_gb_per_step": 840.0,
+    "step_flops": 1.376256e+16,
+    "note": "105B fp16 = 210 GB > 141 GB H200 HBM, so weights MUST stream over PCIe every step; transfer cannot be made resident.",
+    "scenarios": [
+      {
+        "pcie": "measured_pcie_~12.5GB/s",
+        "bw_gb_s": 12.615294746249837,
+        "compute": "achievable_400TFLOPS",
+        "t_transfer_s": 66.58584019606103,
+        "t_compute_s": 34.4064,
+        "async_step_s": 66.58584019606103,
+        "sync_step_s": 100.99224019606103,
+        "async_speedup": 1.5167224728063935,
+        "bound_by": "transfer",
+        "mfu_vs_h200_bf16_pct": 20.888225277671282
+      },
+      {
+        "pcie": "measured_pcie_~12.5GB/s",
+        "bw_gb_s": 12.615294746249837,
+        "compute": "optimistic_700TFLOPS",
+        "t_transfer_s": 66.58584019606103,
+        "t_compute_s": 19.6608,
+        "async_step_s": 66.58584019606103,
+        "sync_step_s": 86.24664019606102,
+        "async_speedup": 1.2952699844607962,
+        "bound_by": "transfer",
+        "mfu_vs_h200_bf16_pct": 20.888225277671282
+      },
+      {
+        "pcie": "pcie_gen4_ideal_25GB/s",
+        "bw_gb_s": 25.0,
+        "compute": "achievable_400TFLOPS",
+        "t_transfer_s": 33.6,
+        "t_compute_s": 34.4064,
+        "async_step_s": 34.4064,
+        "sync_step_s": 68.0064,
+        "async_speedup": 1.9765625,
+        "bound_by": "compute",
+        "mfu_vs_h200_bf16_pct": 40.424456796361795
+      },
+      {
+        "pcie": "pcie_gen4_ideal_25GB/s",
+        "bw_gb_s": 25.0,
+        "compute": "optimistic_700TFLOPS",
+        "t_transfer_s": 33.6,
+        "t_compute_s": 19.6608,
+        "async_step_s": 33.6,
+        "sync_step_s": 53.2608,
+        "async_speedup": 1.5851428571428572,
+        "bound_by": "transfer",
+        "mfu_vs_h200_bf16_pct": 41.394643759474484
+      },
+      {
+        "pcie": "pcie_gen5_ideal_55GB/s",
+        "bw_gb_s": 55.0,
+        "compute": "achievable_400TFLOPS",
+        "t_transfer_s": 15.272727272727273,
+        "t_compute_s": 34.4064,
+        "async_step_s": 34.4064,
+        "sync_step_s": 49.67912727272727,
+        "async_speedup": 1.4438920454545454,
+        "bound_by": "compute",
+        "mfu_vs_h200_bf16_pct": 40.424456796361795
+      },
+      {
+        "pcie": "pcie_gen5_ideal_55GB/s",
+        "bw_gb_s": 55.0,
+        "compute": "optimistic_700TFLOPS",
+        "t_transfer_s": 15.272727272727273,
+        "t_compute_s": 19.6608,
+        "async_step_s": 19.6608,
+        "sync_step_s": 34.933527272727275,
+        "async_speedup": 1.7768110795454548,
+        "bound_by": "compute",
+        "mfu_vs_h200_bf16_pct": 70.74279939363315
+      }
+    ]
+  },
+  "peak_tflops": {
+    "fp32": 67.0,
+    "tf32": 989.0
+  }
+}

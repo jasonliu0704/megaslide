@@ -1,0 +1,38 @@
+# Hybrid Attention Experiment - Medium Scale (128 registers)
+
+model:
+  frames: 32
+  in_channels: 4
+  height: 32
+  width: 32
+  patch_size: 4
+  hidden_size: 128
+  num_layers: 4
+  num_heads: 8
+  mlp_ratio: 2.0
+  dsa_kernel_size: [3, 3, 3]
+  offset_scale: 1.0
+  dropout: 0.0
+  dtype: "float32"
+  device: 0
+  num_registers: 128
+  register_interval: 2
+  register_gate_init: 0.0
+  attention_mode: "hybrid"
+
+dataset:
+  path: ""
+  synthetic_samples: 50
+
+training:
+  batch_size: 2
+  num_steps: 500
+  learning_rate: 3.0e-4
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  seed: 42
+  diffusion_steps: 1000
+
+memory:
+  checkpoint_interval: 2
+  num_grad_slabs: 4

@@ -1,0 +1,27 @@
+Wrote /home/azureuser/megaslide/results/09_fair_attention/fair_attention_12L_768H.json
+{
+  "megaslide_learned": {
+    "val_mse": 0.11732308641076088,
+    "params": 142202128,
+    "peak_gpu_gb": 26.59659433364868,
+    "diverged": false
+  },
+  "megaslide_fixed_offsets": {
+    "val_mse": 0.12739223912358283,
+    "params": 142202128,
+    "peak_gpu_gb": 26.045759677886963,
+    "diverged": false
+  },
+  "dense": {
+    "val_mse": 0.27921612113714217,
+    "params": 91745536,
+    "peak_gpu_gb": 5.978507995605469,
+    "diverged": false
+  },
+  "swin": {
+    "val_mse": 1.0011765003204345,
+    "params": 91745536,
+    "peak_gpu_gb": 3.640343189239502,
+    "diverged": false
+  }
+}

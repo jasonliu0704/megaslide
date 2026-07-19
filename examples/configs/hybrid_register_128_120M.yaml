@@ -1,0 +1,41 @@
+# Hybrid Attention Experiment - ~120M params target on a single H100 NVL.
+# Mixed-precision (bf16 autocast) + batch_size=1 to fit comfortably in 94 GB.
+# Sits adjacent to the systems ladder (1B-class), ~2 orders of magnitude
+# above the existing 1.5M-param hybrid experiment.
+
+model:
+  frames: 32
+  in_channels: 4
+  height: 32
+  width: 32
+  patch_size: 4
+  hidden_size: 1024
+  num_layers: 16
+  num_heads: 16
+  mlp_ratio: 2.0
+  dsa_kernel_size: [3, 5, 5]
+  offset_scale: 1.0
+  dropout: 0.0
+  dtype: "bfloat16"
+  device: 0
+  num_registers: 128
+  register_interval: 2
+  register_gate_init: 0.0
+  attention_mode: "hybrid"
+
+dataset:
+  path: ""
+  synthetic_samples: 64
+
+training:
+  batch_size: 1
+  num_steps: 2000
+  learning_rate: 2.0e-4
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  seed: 42
+  diffusion_steps: 1000
+
+memory:
+  checkpoint_interval: 2
+  num_grad_slabs: 4

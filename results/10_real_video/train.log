@@ -1,0 +1,231 @@
+16:58:38 [INFO] ======================================================================
+16:58:38 [INFO] MEGASLIDE-DIT TRAINING — PHASE 1 (REAL VIDEO)
+16:58:38 [INFO] ======================================================================
+16:58:38 [INFO] Shape: B=1 C=4 T=16 H=32 W=32 hidden=1024 layers=22
+Loaded 176 samples from data/real_video_latents/train_latents.pt
+Loaded 31 samples from data/real_video_latents/val_latents.pt
+16:58:38 [INFO] Train: 176 samples, Val: 31 samples
+16:58:40 [INFO] Model params: 370.22M
+[CPUMasterVideoDiT] Running on cuda:0
+16:58:41 [INFO] ======================================================================
+16:58:41 [INFO] Starting training (1000 steps)
+16:58:41 [INFO] ======================================================================
+  [Step 10] Gradient norm: 436.8669
+16:58:56 [INFO] Step 10/1000 | loss 2.7595 | avg 2.8186 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 20] Gradient norm: 103.0206
+16:59:09 [INFO] Step 20/1000 | loss 2.8447 | avg 2.8315 | 1.63s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 30] Gradient norm: 633.6967
+16:59:24 [INFO] Step 30/1000 | loss 2.8323 | avg 2.8332 | 1.72s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 40] Gradient norm: 289.5529
+16:59:39 [INFO] Step 40/1000 | loss 2.8401 | avg 2.8299 | 1.20s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 50] Gradient norm: 324.4651
+16:59:53 [INFO] Step 50/1000 | loss 2.8352 | avg 2.8284 | 1.49s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 60] Gradient norm: 648.2823
+17:00:08 [INFO] Step 60/1000 | loss 2.8130 | avg 2.8227 | 1.44s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 70] Gradient norm: 771.4235
+17:00:21 [INFO] Step 70/1000 | loss 2.7788 | avg 2.8199 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 80] Gradient norm: 224.1209
+17:00:36 [INFO] Step 80/1000 | loss 2.8438 | avg 2.8191 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 90] Gradient norm: 244.1604
+17:00:52 [INFO] Step 90/1000 | loss 2.8377 | avg 2.8094 | 1.23s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 100] Gradient norm: 164.9439
+17:01:05 [INFO] Step 100/1000 | loss 2.8242 | avg 2.8086 | 1.28s/step | GPU 1.7GB | RAM 7.1GB
+17:01:10 [INFO]   VAL step 100: 25.7079 (best)
+  [Step 110] Gradient norm: 58726.2461
+17:01:23 [INFO] Step 110/1000 | loss 2.8204 | avg 2.8082 | 1.40s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 120] Gradient norm: 1259.0665
+17:01:38 [INFO] Step 120/1000 | loss 2.8405 | avg 2.8062 | 1.40s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 130] Gradient norm: 128.1486
+17:01:53 [INFO] Step 130/1000 | loss 2.8338 | avg 2.8017 | 1.19s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 140] Gradient norm: 120.7920
+17:02:07 [INFO] Step 140/1000 | loss 2.8510 | avg 2.8025 | 1.49s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 150] Gradient norm: 857.4377
+17:02:22 [INFO] Step 150/1000 | loss 2.8331 | avg 2.7997 | 1.77s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 160] Gradient norm: 21.4089
+17:02:36 [INFO] Step 160/1000 | loss 2.8185 | avg 2.7996 | 1.21s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 170] Gradient norm: 996.0728
+17:02:51 [INFO] Step 170/1000 | loss 2.8129 | avg 2.8008 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 180] Gradient norm: 158058.3438
+17:03:06 [INFO] Step 180/1000 | loss 2.8053 | avg 2.7932 | 1.43s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 190] Gradient norm: 493.0427
+17:03:20 [INFO] Step 190/1000 | loss 2.4370 | avg 2.7916 | 1.68s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 200] Gradient norm: 493.5575
+17:03:35 [INFO] Step 200/1000 | loss 2.4364 | avg 2.7863 | 1.73s/step | GPU 1.7GB | RAM 7.1GB
+17:03:40 [INFO]   VAL step 200: 32.6683
+  [Step 210] Gradient norm: 1185.7847
+17:03:55 [INFO] Step 210/1000 | loss 2.7638 | avg 2.7855 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 220] Gradient norm: 487.4769
+17:04:10 [INFO] Step 220/1000 | loss 2.4010 | avg 2.7764 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 230] Gradient norm: 1305.2670
+17:04:23 [INFO] Step 230/1000 | loss 2.7528 | avg 2.7724 | 1.68s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 240] Gradient norm: 1384.7667
+17:04:38 [INFO] Step 240/1000 | loss 2.7344 | avg 2.7683 | 1.65s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 250] Gradient norm: 73.0062
+17:04:53 [INFO] Step 250/1000 | loss 2.7335 | avg 2.7627 | 1.20s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 260] Gradient norm: 69.9211
+17:05:07 [INFO] Step 260/1000 | loss 2.7201 | avg 2.7575 | 1.37s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 270] Gradient norm: 1307.3484
+17:05:22 [INFO] Step 270/1000 | loss 2.7246 | avg 2.7535 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 280] Gradient norm: 1172.6517
+17:05:35 [INFO] Step 280/1000 | loss 2.7060 | avg 2.7523 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 290] Gradient norm: 675.4178
+17:05:49 [INFO] Step 290/1000 | loss 2.3607 | avg 2.7480 | 1.43s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 300] Gradient norm: 62.7015
+17:06:05 [INFO] Step 300/1000 | loss 2.6850 | avg 2.7417 | 1.17s/step | GPU 1.7GB | RAM 7.1GB
+17:06:10 [INFO]   VAL step 300: 34.3892
+  [Step 310] Gradient norm: 572377.5625
+17:06:24 [INFO] Step 310/1000 | loss 2.6932 | avg 2.7349 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 320] Gradient norm: 876.9669
+17:06:37 [INFO] Step 320/1000 | loss 2.6885 | avg 2.7328 | 1.44s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 330] Gradient norm: 846.9337
+17:06:51 [INFO] Step 330/1000 | loss 2.6842 | avg 2.7295 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 340] Gradient norm: 75.3891
+17:07:07 [INFO] Step 340/1000 | loss 2.7066 | avg 2.7261 | 1.18s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 350] Gradient norm: 73.9977
+17:07:21 [INFO] Step 350/1000 | loss 2.7184 | avg 2.7240 | 1.61s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 360] Gradient norm: 946.8179
+17:07:36 [INFO] Step 360/1000 | loss 2.3292 | avg 2.7210 | 1.69s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 370] Gradient norm: 24.3821
+17:07:50 [INFO] Step 370/1000 | loss 2.6911 | avg 2.7198 | 1.10s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 380] Gradient norm: 796.5140
+17:08:05 [INFO] Step 380/1000 | loss 2.6662 | avg 2.7186 | 1.43s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 390] Gradient norm: 706.5142
+17:08:20 [INFO] Step 390/1000 | loss 2.6693 | avg 2.7156 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 400] Gradient norm: 79.6292
+17:08:33 [INFO] Step 400/1000 | loss 2.6689 | avg 2.7134 | 1.75s/step | GPU 1.7GB | RAM 7.1GB
+17:08:38 [INFO]   VAL step 400: 33.0790
+  [Step 410] Gradient norm: 81.7708
+17:08:52 [INFO] Step 410/1000 | loss 2.6876 | avg 2.7106 | 1.12s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 420] Gradient norm: 588.3651
+17:09:07 [INFO] Step 420/1000 | loss 2.6606 | avg 2.7099 | 1.43s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 430] Gradient norm: 894.2114
+17:09:22 [INFO] Step 430/1000 | loss 2.3334 | avg 2.7060 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 440] Gradient norm: 1213.9819
+17:09:35 [INFO] Step 440/1000 | loss 2.3142 | avg 2.7036 | 1.68s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 450] Gradient norm: 549.5739
+17:09:50 [INFO] Step 450/1000 | loss 2.3085 | avg 2.7038 | 1.76s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 460] Gradient norm: 165.5317
+17:10:05 [INFO] Step 460/1000 | loss 2.7620 | avg 2.7041 | 1.18s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 470] Gradient norm: 66.3983
+17:10:19 [INFO] Step 470/1000 | loss 2.6121 | avg 2.7025 | 1.38s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 480] Gradient norm: 560.7331
+17:10:35 [INFO] Step 480/1000 | loss 2.3161 | avg 2.6984 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 490] Gradient norm: 743.6993
+17:10:48 [INFO] Step 490/1000 | loss 2.3059 | avg 2.6956 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 500] Gradient norm: 1285.1255
+17:11:02 [INFO] Step 500/1000 | loss 2.5964 | avg 2.6934 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+17:11:07 [INFO]   VAL step 500: 36.1545
+  [Step 510] Gradient norm: 54.9234
+17:11:23 [INFO] Step 510/1000 | loss 2.5829 | avg 2.6911 | 1.64s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 520] Gradient norm: 488392.8750
+17:11:37 [INFO] Step 520/1000 | loss 2.6287 | avg 2.6884 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 530] Gradient norm: 1268.3672
+17:11:50 [INFO] Step 530/1000 | loss 2.5891 | avg 2.6868 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 540] Gradient norm: 1661.4559
+17:12:05 [INFO] Step 540/1000 | loss 2.5857 | avg 2.6847 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 550] Gradient norm: 59.6040
+17:12:20 [INFO] Step 550/1000 | loss 2.5989 | avg 2.6827 | 1.17s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 560] Gradient norm: 69.9699
+17:12:34 [INFO] Step 560/1000 | loss 2.6205 | avg 2.6813 | 1.54s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 570] Gradient norm: 1567.9834
+17:12:49 [INFO] Step 570/1000 | loss 2.6107 | avg 2.6794 | 1.73s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 580] Gradient norm: 66.1882
+17:13:03 [INFO] Step 580/1000 | loss 2.6094 | avg 2.6781 | 1.18s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 590] Gradient norm: 645.7831
+17:13:18 [INFO] Step 590/1000 | loss 2.2531 | avg 2.6754 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 600] Gradient norm: 1667.0179
+17:13:33 [INFO] Step 600/1000 | loss 2.6020 | avg 2.6713 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+17:13:38 [INFO]   VAL step 600: 34.8669
+  [Step 610] Gradient norm: 56.2807
+17:13:52 [INFO] Step 610/1000 | loss 2.5623 | avg 2.6688 | 1.22s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 620] Gradient norm: 65.4597
+17:14:06 [INFO] Step 620/1000 | loss 2.6121 | avg 2.6670 | 1.26s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 630] Gradient norm: 88.3726
+17:14:22 [INFO] Step 630/1000 | loss 2.5883 | avg 2.6631 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 640] Gradient norm: 802.7264
+17:14:35 [INFO] Step 640/1000 | loss 2.2590 | avg 2.6608 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 650] Gradient norm: 635.3472
+17:14:50 [INFO] Step 650/1000 | loss 2.2414 | avg 2.6589 | 1.71s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 660] Gradient norm: 77.0142
+17:15:05 [INFO] Step 660/1000 | loss 2.5624 | avg 2.6567 | 1.15s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 670] Gradient norm: 82.4385
+17:15:19 [INFO] Step 670/1000 | loss 2.5651 | avg 2.6555 | 1.46s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 680] Gradient norm: 782.8254
+17:15:34 [INFO] Step 680/1000 | loss 2.2608 | avg 2.6524 | 1.71s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 690] Gradient norm: 2086.3171
+17:15:47 [INFO] Step 690/1000 | loss 2.5705 | avg 2.6512 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 700] Gradient norm: 1730.1964
+17:16:02 [INFO] Step 700/1000 | loss 2.5711 | avg 2.6495 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+17:16:07 [INFO]   VAL step 700: 32.9243
+  [Step 710] Gradient norm: 58.8257
+17:16:22 [INFO] Step 710/1000 | loss 2.5350 | avg 2.6478 | 1.67s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 720] Gradient norm: 1871.8499
+17:16:36 [INFO] Step 720/1000 | loss 2.5519 | avg 2.6460 | 1.51s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 730] Gradient norm: 1626.0312
+17:16:49 [INFO] Step 730/1000 | loss 2.5626 | avg 2.6448 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 740] Gradient norm: 2143.5354
+17:17:05 [INFO] Step 740/1000 | loss 2.5553 | avg 2.6436 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 750] Gradient norm: 2557843.7500
+17:17:20 [INFO] Step 750/1000 | loss 2.5592 | avg 2.6407 | 1.45s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 760] Gradient norm: 87.0556
+17:17:33 [INFO] Step 760/1000 | loss 2.5545 | avg 2.6390 | 1.59s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 770] Gradient norm: 1080.6229
+17:17:48 [INFO] Step 770/1000 | loss 2.2124 | avg 2.6370 | 1.65s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 780] Gradient norm: 81.5104
+17:18:02 [INFO] Step 780/1000 | loss 2.5477 | avg 2.6355 | 1.21s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 790] Gradient norm: 134.2481
+17:18:16 [INFO] Step 790/1000 | loss 2.6652 | avg 2.6349 | 1.24s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 800] Gradient norm: 4450.9678
+17:18:32 [INFO] Step 800/1000 | loss 2.5898 | avg 2.6317 | 1.44s/step | GPU 1.7GB | RAM 7.1GB
+17:18:37 [INFO]   VAL step 800: 5.5406 (best)
+  [Step 810] Gradient norm: 793.6290
+17:18:52 [INFO] Step 810/1000 | loss 2.1860 | avg 2.6308 | 1.57s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 820] Gradient norm: 119.7252
+17:19:05 [INFO] Step 820/1000 | loss 2.5738 | avg 2.6295 | 1.15s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 830] Gradient norm: 195.3527
+17:19:20 [INFO] Step 830/1000 | loss 2.6424 | avg 2.6290 | 1.27s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 840] Gradient norm: 4364450.5000
+17:19:35 [INFO] Step 840/1000 | loss 2.5285 | avg 2.6264 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 850] Gradient norm: 124.2515
+17:19:48 [INFO] Step 850/1000 | loss 2.5474 | avg 2.6253 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 860] Gradient norm: 986.9362
+17:20:03 [INFO] Step 860/1000 | loss 2.1921 | avg 2.6241 | 1.68s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 870] Gradient norm: 99.6064
+17:20:18 [INFO] Step 870/1000 | loss 2.7711 | avg 2.6230 | 1.20s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 880] Gradient norm: 108.7869
+17:20:33 [INFO] Step 880/1000 | loss 2.6990 | avg 2.6227 | 1.53s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 890] Gradient norm: 929.7855
+17:20:48 [INFO] Step 890/1000 | loss 2.1656 | avg 2.6206 | 1.70s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 900] Gradient norm: 39737.7578
+17:21:01 [INFO] Step 900/1000 | loss 2.6116 | avg 2.6202 | 1.42s/step | GPU 1.7GB | RAM 7.1GB
+17:21:06 [INFO]   VAL step 900: 23.4689
+  [Step 910] Gradient norm: 72.3490
+17:21:20 [INFO] Step 910/1000 | loss 2.5770 | avg 2.6188 | 1.18s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 920] Gradient norm: 93.8061
+17:21:34 [INFO] Step 920/1000 | loss 2.5988 | avg 2.6180 | 1.58s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 930] Gradient norm: 535.4767
+17:21:49 [INFO] Step 930/1000 | loss 2.1671 | avg 2.6153 | 1.59s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 940] Gradient norm: 5435962.5000
+17:22:02 [INFO] Step 940/1000 | loss 2.5388 | avg 2.6140 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 950] Gradient norm: 3294.7852
+17:22:17 [INFO] Step 950/1000 | loss 2.5284 | avg 2.6135 | 1.41s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 960] Gradient norm: 2985.0173
+17:22:32 [INFO] Step 960/1000 | loss 2.5123 | avg 2.6118 | 1.44s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 970] Gradient norm: 115.0286
+17:22:46 [INFO] Step 970/1000 | loss 2.5823 | avg 2.6108 | 1.59s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 980] Gradient norm: 3413.8784
+17:23:01 [INFO] Step 980/1000 | loss 2.5104 | avg 2.6097 | 1.75s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 990] Gradient norm: 99.1002
+17:23:15 [INFO] Step 990/1000 | loss 2.5444 | avg 2.6084 | 1.17s/step | GPU 1.7GB | RAM 7.1GB
+  [Step 1000] Gradient norm: 112.2522
+17:23:29 [INFO] Step 1000/1000 | loss 2.5331 | avg 2.6072 | 1.25s/step | GPU 1.7GB | RAM 7.1GB
+17:23:34 [INFO]   VAL step 1000: 33.6865
+17:23:39 [INFO] Final VAL: 33.6838 (best: 5.5406)
+17:23:39 [INFO] ======================================================================
+17:23:39 [INFO] TRAINING COMPLETE
+17:23:39 [INFO] ======================================================================
+17:23:39 [INFO] Loss: 2.8359 -> 2.5331 (avg-last-50: 2.4878)
+17:23:39 [INFO] Elapsed: 1493.2s | Avg step: 1.442s
+17:23:39 [INFO] Peak GPU: 1.75 GB | Peak RAM: 7.10 GB
+17:23:39 [INFO] Best val loss: 5.5406
+17:23:39 [INFO] Results saved: results/10_real_video/real_video_results.json

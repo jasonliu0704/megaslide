@@ -1,0 +1,23 @@
+[2026-06-25 04:27:25] ============================================================
+[2026-06-25 04:27:25] Queue start. host=inference-h100 pid=8590 user=root
+[2026-06-25 04:27:25] GPU: GPU 0: NVIDIA H100 NVL (UUID: GPU-ea6be45a-3b2d-126d-c77a-ccebaeb0d65e)
+[2026-06-25 04:27:25] Host RAM: 314Gi total, 309Gi avail
+[2026-06-25 04:27:25] Disk free: 867G
+[2026-06-25 04:27:25] ============================================================
+[2026-06-25 04:27:25] Phase 3 START: Hybrid + registers @ 120M (baseline + register-64 + register-128)
+[2026-06-25 04:27:25] Phase 3 :: variant=baseline
+[2026-06-25 04:30:27] ============================================================
+[2026-06-25 04:30:27] Queue start. host=inference-h100 pid=8933 user=root
+[2026-06-25 04:30:27] GPU: GPU 0: NVIDIA H100 NVL (UUID: GPU-ea6be45a-3b2d-126d-c77a-ccebaeb0d65e)
+[2026-06-25 04:30:27] Host RAM: 314Gi total, 309Gi avail
+[2026-06-25 04:30:27] Disk free: 867G
+[2026-06-25 04:30:27] ============================================================
+[2026-06-25 04:30:27] Phase 3 START: Hybrid + registers @ 120M (baseline + register-64 + register-128)
+[2026-06-25 04:30:27] Phase 3 :: variant=baseline
+[2026-06-25 04:51:00] Phase 3 :: variant=register
+[2026-06-25 05:14:57] Phase 3 DONE.
+[2026-06-25 05:14:57] Phase 1 SKIPPED (no /home/azureuser/megaslide/results/queue.enable_phase1). Build Phase 0 scaffolds first.
+[2026-06-25 05:14:57] Phase 2 SKIPPED (no /home/azureuser/megaslide/results/queue.enable_phase2). Build run_deepspeed_baseline.py first.
+[2026-06-25 05:14:57] ============================================================
+[2026-06-25 05:14:57] Queue finished. Check results/ for outputs.
+[2026-06-25 05:14:57] ============================================================

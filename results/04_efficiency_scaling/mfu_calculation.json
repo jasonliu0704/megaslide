@@ -1,0 +1,13 @@
+{
+  "params": 12620000000.0,
+  "seq_len": 1024,
+  "total_step_flops": 49655593304064,
+  "async_step_time": 25.485,
+  "sync_step_time": 32.077,
+  "mfu_async_fp32_pct": 2.9080959712364605,
+  "mfu_sync_fp32_pct": 2.3104662476840474,
+  "mfu_async_tf32_pct": 0.19700953495737394,
+  "mfu_sync_tf32_pct": 0.156522991501346,
+  "h100_peak_fp32_tflops": 67,
+  "h100_peak_tf32_tflops": 989
+}

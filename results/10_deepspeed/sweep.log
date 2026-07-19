@@ -1,0 +1,272 @@
+==== Phase 2 sweep started at 2026-06-25T07:26:14Z ====
+Output dir: /home/azureuser/megaslide/results/10_deepspeed
+
+[07:26:14] >>> START scale=1b steps=12
+
+=== fsdp_cpu @ scale=1b (steps=12) ===
+  config: layers=12 hidden=2048 heads=32 frames=16 batch=1
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:1061: UserWarning: Can't initialize NVML
+  raw_cnt = _raw_device_count_nvml()
+  [fsdp_cpu] building Dense3DDiTBF16 (layers=12 hidden=2048)
+  [fsdp_cpu] params: 641.0M
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:478: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+  _init_core_state(
+  [fsdp_cpu] step 1/12 loss=1.3438 time=3.90s host_ram=12.6GB peak_gpu=2.7GB
+  [fsdp_cpu] step 2/12 loss=2.0938 time=0.54s host_ram=12.6GB peak_gpu=2.7GB
+  [fsdp_cpu] step 3/12 loss=1.4688 time=0.54s host_ram=12.6GB peak_gpu=2.7GB
+  [fsdp_cpu] step 4/12 loss=1.0703 time=0.59s host_ram=12.6GB peak_gpu=2.7GB
+  [fsdp_cpu] step 5/12 loss=1.0391 time=0.54s host_ram=12.6GB peak_gpu=2.7GB
+  [fsdp_cpu] step 6/12 loss=1.0391 time=0.54s host_ram=12.6GB peak_gpu=2.7GB
+  [fsdp_cpu] step 7/12 loss=1.0312 time=0.60s host_ram=12.6GB peak_gpu=2.7GB
+  [fsdp_cpu] step 8/12 loss=1.0234 time=0.54s host_ram=12.6GB peak_gpu=2.7GB
+  [fsdp_cpu] step 9/12 loss=1.0156 time=0.54s host_ram=12.6GB peak_gpu=2.7GB
+  [fsdp_cpu] step 10/12 loss=1.0156 time=0.55s host_ram=12.6GB peak_gpu=2.7GB
+  [fsdp_cpu] step 11/12 loss=1.0078 time=0.61s host_ram=12.6GB peak_gpu=2.7GB
+  [fsdp_cpu] step 12/12 loss=1.0078 time=0.60s host_ram=12.6GB peak_gpu=2.7GB
+  saved: /home/azureuser/megaslide/results/10_deepspeed/fsdp_cpu_1b.json
+  summary: params=641016064 peak_gpu=2.7GB peak_host_ram=12.6GB avg_step=0.5629706126359948 oom=False
+[07:26:31] <<< END  scale=1b rc=0
+
+[07:26:31] >>> START scale=3b steps=12
+
+=== fsdp_cpu @ scale=3b (steps=12) ===
+  config: layers=24 hidden=2560 heads=20 frames=16 batch=1
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:1061: UserWarning: Can't initialize NVML
+  raw_cnt = _raw_device_count_nvml()
+  [fsdp_cpu] building Dense3DDiTBF16 (layers=24 hidden=2560)
+  [fsdp_cpu] params: 1944.6M
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:478: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+  _init_core_state(
+  [fsdp_cpu] step 1/12 loss=1.2969 time=13.42s host_ram=40.6GB peak_gpu=7.6GB
+  [fsdp_cpu] step 2/12 loss=2.3125 time=1.72s host_ram=40.6GB peak_gpu=7.6GB
+  [fsdp_cpu] step 3/12 loss=2.5625 time=1.66s host_ram=40.6GB peak_gpu=7.6GB
+  [fsdp_cpu] step 4/12 loss=1.5312 time=2.00s host_ram=40.6GB peak_gpu=7.6GB
+  [fsdp_cpu] step 5/12 loss=1.0625 time=1.74s host_ram=40.6GB peak_gpu=7.6GB
+  [fsdp_cpu] step 6/12 loss=1.0234 time=1.81s host_ram=40.6GB peak_gpu=7.6GB
+  [fsdp_cpu] step 7/12 loss=1.0312 time=1.64s host_ram=40.6GB peak_gpu=7.6GB
+  [fsdp_cpu] step 8/12 loss=1.0391 time=1.72s host_ram=40.6GB peak_gpu=7.6GB
+  [fsdp_cpu] step 9/12 loss=1.0391 time=1.66s host_ram=40.6GB peak_gpu=7.6GB
+  [fsdp_cpu] step 10/12 loss=1.0391 time=1.65s host_ram=40.6GB peak_gpu=7.6GB
+  [fsdp_cpu] step 11/12 loss=1.0156 time=1.65s host_ram=40.6GB peak_gpu=7.6GB
+  [fsdp_cpu] step 12/12 loss=1.0156 time=1.87s host_ram=40.6GB peak_gpu=7.6GB
+  saved: /home/azureuser/megaslide/results/10_deepspeed/fsdp_cpu_3b.json
+  summary: params=1944617216 peak_gpu=7.6GB peak_host_ram=40.6GB avg_step=1.7370364832730212 oom=False
+[07:27:18] <<< END  scale=3b rc=0
+
+[07:27:18] >>> START scale=7b steps=8
+
+=== fsdp_cpu @ scale=7b (steps=8) ===
+  config: layers=40 hidden=3584 heads=28 frames=16 batch=1
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:1061: UserWarning: Can't initialize NVML
+  raw_cnt = _raw_device_count_nvml()
+  [fsdp_cpu] building Dense3DDiTBF16 (layers=40 hidden=3584)
+  [fsdp_cpu] params: 6275.8M
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:478: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+  _init_core_state(
+  [fsdp_cpu] step 1/8 loss=1.3516 time=42.26s host_ram=129.8GB peak_gpu=24.1GB
+  [fsdp_cpu] step 2/8 loss=2.7031 time=5.25s host_ram=129.8GB peak_gpu=24.1GB
+  [fsdp_cpu] step 3/8 loss=1.6953 time=5.25s host_ram=129.8GB peak_gpu=24.1GB
+  [fsdp_cpu] step 4/8 loss=2.3594 time=5.25s host_ram=129.8GB peak_gpu=24.1GB
+  [fsdp_cpu] step 5/8 loss=2.7031 time=5.42s host_ram=129.8GB peak_gpu=24.1GB
+  [fsdp_cpu] step 6/8 loss=1.7578 time=5.34s host_ram=129.8GB peak_gpu=24.1GB
+  [fsdp_cpu] step 7/8 loss=1.2500 time=5.33s host_ram=129.8GB peak_gpu=24.1GB
+  [fsdp_cpu] step 8/8 loss=1.0781 time=5.29s host_ram=129.8GB peak_gpu=24.1GB
+  saved: /home/azureuser/megaslide/results/10_deepspeed/fsdp_cpu_7b.json
+  summary: params=6275784960 peak_gpu=24.1GB peak_host_ram=129.8GB avg_step=5.304962618426154 oom=False
+[07:29:17] <<< END  scale=7b rc=0
+
+[07:29:17] >>> START scale=12.6b steps=6
+
+=== fsdp_cpu @ scale=12.6b (steps=6) ===
+  config: layers=48 hidden=4096 heads=32 frames=16 batch=1
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:1061: UserWarning: Can't initialize NVML
+  raw_cnt = _raw_device_count_nvml()
+  [fsdp_cpu] building Dense3DDiTBF16 (layers=48 hidden=4096)
+  [fsdp_cpu] params: 9806.8M
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:478: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+  _init_core_state(
+  [fsdp_cpu] step 1/6 loss=1.3672 time=53.95s host_ram=172.8GB peak_gpu=37.4GB
+  [fsdp_cpu] step 2/6 loss=2.7656 time=8.60s host_ram=172.8GB peak_gpu=37.4GB
+  [fsdp_cpu] step 3/6 loss=2.7656 time=8.46s host_ram=172.8GB peak_gpu=37.4GB
+  [fsdp_cpu] step 4/6 loss=2.6562 time=8.41s host_ram=172.8GB peak_gpu=37.4GB
+  [fsdp_cpu] step 5/6 loss=1.6641 time=8.50s host_ram=172.8GB peak_gpu=37.4GB
+  [fsdp_cpu] step 6/6 loss=1.1562 time=8.41s host_ram=172.8GB peak_gpu=37.4GB
+  saved: /home/azureuser/megaslide/results/10_deepspeed/fsdp_cpu_12.6b.json
+  summary: params=9806774528 peak_gpu=37.4GB peak_host_ram=172.8GB avg_step=8.475506090599811 oom=False
+[07:31:50] <<< END  scale=12.6b rc=0
+==== Phase 2 sweep started at 2026-06-25T07:33:01Z ====
+Output dir: /home/azureuser/megaslide/results/10_deepspeed
+[07:33:02] SKIP 1b (already done)
+[07:33:02] SKIP 3b (already done)
+[07:33:02] SKIP 7b (already done)
+[07:33:02] SKIP 12.6b (already done)
+
+[07:33:02] >>> START scale=19.7b steps=5
+
+=== fsdp_cpu @ scale=19.7b (steps=5) ===
+  config: layers=64 hidden=4608 heads=32 frames=16 batch=1
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:1061: UserWarning: Can't initialize NVML
+  raw_cnt = _raw_device_count_nvml()
+  [fsdp_cpu] building Dense3DDiTBF16 (layers=64 hidden=4608)
+  [fsdp_cpu] params: 16488.3M
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:478: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+  _init_core_state(
+  [fsdp_cpu] step 1/5 loss=1.3359 time=75.33s host_ram=254.6GB peak_gpu=62.6GB
+  [fsdp_cpu] step 2/5 loss=3.1250 time=14.30s host_ram=254.6GB peak_gpu=62.6GB
+  [fsdp_cpu] step 3/5 loss=1.3516 time=13.90s host_ram=254.6GB peak_gpu=62.6GB
+  [fsdp_cpu] step 4/5 loss=3.2344 time=14.04s host_ram=254.6GB peak_gpu=62.6GB
+  [fsdp_cpu] step 5/5 loss=2.0000 time=13.95s host_ram=254.6GB peak_gpu=62.6GB
+  saved: /home/azureuser/megaslide/results/10_deepspeed/fsdp_cpu_19.7b.json
+  summary: params=16488272128 peak_gpu=62.6GB peak_host_ram=254.6GB avg_step=14.04955262374824 oom=False
+[07:36:38] <<< END  scale=19.7b rc=0
+
+[07:36:38] >>> START scale=28.4b steps=5
+
+=== fsdp_cpu @ scale=28.4b (steps=5) ===
+  config: layers=80 hidden=5120 heads=32 frames=16 batch=1
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:1061: UserWarning: Can't initialize NVML
+  raw_cnt = _raw_device_count_nvml()
+  [fsdp_cpu] building Dense3DDiTBF16 (layers=80 hidden=5120)
+  [fsdp_cpu] params: 25388.8M
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:478: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+  _init_core_state(
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/azureuser/megaslide/examples/run_offload_comparison.py", line 282, in <module>
+[rank0]:     main()
+[rank0]:   File "/home/azureuser/megaslide/examples/run_offload_comparison.py", line 232, in main
+[rank0]:     result = run(config, args.num_steps)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/examples/run_offload_comparison.py", line 152, in run
+[rank0]:     fsdp_model = FullyShardedDataParallel(
+[rank0]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py", line 467, in __init__
+[rank0]:     _auto_wrap(
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_wrap_utils.py", line 102, in _auto_wrap
+[rank0]:     _recursive_wrap(**recursive_wrap_kwargs, **root_kwargs)  # type: ignore[arg-type]
+[rank0]:     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/wrap.py", line 544, in _recursive_wrap
+[rank0]:     wrapped_child, num_wrapped_params = _recursive_wrap(
+[rank0]:                                         ^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/wrap.py", line 544, in _recursive_wrap
+[rank0]:     wrapped_child, num_wrapped_params = _recursive_wrap(
+[rank0]:                                         ^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/wrap.py", line 562, in _recursive_wrap
+[rank0]:     return _wrap(module, wrapper_cls, **kwargs), nonwrapped_numel
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/wrap.py", line 485, in _wrap
+[rank0]:     return wrapper_cls(module, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py", line 493, in __init__
+[rank0]:     _init_param_handle_from_module(
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_init_utils.py", line 626, in _init_param_handle_from_module
+[rank0]:     _init_param_handle_from_params(state, managed_params, fully_sharded_module)
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_init_utils.py", line 638, in _init_param_handle_from_params
+[rank0]:     handle = FlatParamHandle(
+[rank0]:              ^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_flat_param.py", line 616, in __init__
+[rank0]:     self._init_flat_param_and_metadata(
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_flat_param.py", line 779, in _init_flat_param_and_metadata
+[rank0]:     self.flat_param: FlatParameter = self.flatten_tensors_into_flat_param(
+[rank0]:                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_flat_param.py", line 902, in flatten_tensors_into_flat_param
+[rank0]:     flat_param_data = self.flatten_tensors(tensors, aligned_numel)
+[rank0]:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_flat_param.py", line 894, in flatten_tensors
+[rank0]:     return torch.cat(flat_tensors, dim=0)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: RuntimeError: NVML_SUCCESS == DriverAPI::get()->nvmlInit_v2_() INTERNAL ASSERT FAILED at "/pytorch/c10/cuda/CUDACachingAllocator.cpp":1135, please report a bug to PyTorch. 
+[07:38:03] <<< END  scale=28.4b rc=1
+
+[07:38:03] >>> START scale=33.3b steps=5
+
+=== fsdp_cpu @ scale=33.3b (steps=5) ===
+  config: layers=96 hidden=5120 heads=32 frames=16 batch=1
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:1061: UserWarning: Can't initialize NVML
+  raw_cnt = _raw_device_count_nvml()
+  [fsdp_cpu] building Dense3DDiTBF16 (layers=96 hidden=5120)
+  [fsdp_cpu] params: 30423.0M
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:478: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+  _init_core_state(
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/azureuser/megaslide/examples/run_offload_comparison.py", line 282, in <module>
+[rank0]:     main()
+[rank0]:   File "/home/azureuser/megaslide/examples/run_offload_comparison.py", line 232, in main
+[rank0]:     result = run(config, args.num_steps)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/examples/run_offload_comparison.py", line 152, in run
+[rank0]:     fsdp_model = FullyShardedDataParallel(
+[rank0]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py", line 467, in __init__
+[rank0]:     _auto_wrap(
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_wrap_utils.py", line 102, in _auto_wrap
+[rank0]:     _recursive_wrap(**recursive_wrap_kwargs, **root_kwargs)  # type: ignore[arg-type]
+[rank0]:     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/wrap.py", line 544, in _recursive_wrap
+[rank0]:     wrapped_child, num_wrapped_params = _recursive_wrap(
+[rank0]:                                         ^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/wrap.py", line 544, in _recursive_wrap
+[rank0]:     wrapped_child, num_wrapped_params = _recursive_wrap(
+[rank0]:                                         ^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/wrap.py", line 562, in _recursive_wrap
+[rank0]:     return _wrap(module, wrapper_cls, **kwargs), nonwrapped_numel
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/wrap.py", line 485, in _wrap
+[rank0]:     return wrapper_cls(module, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py", line 493, in __init__
+[rank0]:     _init_param_handle_from_module(
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_init_utils.py", line 626, in _init_param_handle_from_module
+[rank0]:     _init_param_handle_from_params(state, managed_params, fully_sharded_module)
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_init_utils.py", line 638, in _init_param_handle_from_params
+[rank0]:     handle = FlatParamHandle(
+[rank0]:              ^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_flat_param.py", line 616, in __init__
+[rank0]:     self._init_flat_param_and_metadata(
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_flat_param.py", line 779, in _init_flat_param_and_metadata
+[rank0]:     self.flat_param: FlatParameter = self.flatten_tensors_into_flat_param(
+[rank0]:                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_flat_param.py", line 902, in flatten_tensors_into_flat_param
+[rank0]:     flat_param_data = self.flatten_tensors(tensors, aligned_numel)
+[rank0]:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/_flat_param.py", line 894, in flatten_tensors
+[rank0]:     return torch.cat(flat_tensors, dim=0)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: RuntimeError: NVML_SUCCESS == DriverAPI::get()->nvmlInit_v2_() INTERNAL ASSERT FAILED at "/pytorch/c10/cuda/CUDACachingAllocator.cpp":1135, please report a bug to PyTorch. 
+[07:39:42] <<< END  scale=33.3b rc=1
+
+==== Phase 2 sweep finished at 2026-06-25T07:39:42Z ====
+==== Phase 2 sweep started at 2026-06-25T07:43:56Z ====
+Output dir: /home/azureuser/megaslide/results/10_deepspeed
+[07:43:56] SKIP 1b (already done)
+[07:43:56] SKIP 3b (already done)
+[07:43:56] SKIP 7b (already done)
+[07:43:56] SKIP 12.6b (already done)
+[07:43:56] SKIP 19.7b (already done)
+
+[07:43:56] >>> START scale=28.4b steps=5
+
+=== fsdp_cpu @ scale=28.4b (steps=5) ===
+  config: layers=80 hidden=5120 heads=32 frames=16 batch=1
+  [fsdp_cpu] building Dense3DDiTBF16 (layers=80 hidden=5120)
+  [fsdp_cpu] params: 25388.8M
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:478: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+  _init_core_state(
+  [fsdp_cpu] CUDA OOM at scale=28.4b: CUDA out of memory. Tried to allocate 1.17 GiB. GPU 0 has a total capacity of 93.09 GiB of which 1.01 GiB is free. Including non-PyTorch memory, this process has 92.07 GiB memory in use. Of the alloca
+  saved: /home/azureuser/megaslide/results/10_deepspeed/fsdp_cpu_28.4b.json
+  summary: params=None peak_gpu=91.4GB peak_host_ram=94.1GB avg_step=None oom=True
+[07:45:21] <<< END  scale=28.4b rc=0
+
+[07:45:21] >>> START scale=33.3b steps=5
+
+=== fsdp_cpu @ scale=33.3b (steps=5) ===
+  config: layers=96 hidden=5120 heads=32 frames=16 batch=1
+  [fsdp_cpu] building Dense3DDiTBF16 (layers=96 hidden=5120)
+  [fsdp_cpu] params: 30423.0M
+/home/azureuser/megaslide/venv/lib/python3.12/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:478: UserWarning: FSDP is switching to use `NO_SHARD` instead of ShardingStrategy.FULL_SHARD since the world size is 1.
+  _init_core_state(
+  [fsdp_cpu] CUDA OOM at scale=33.3b: CUDA out of memory. Tried to allocate 1.17 GiB. GPU 0 has a total capacity of 93.09 GiB of which 1.01 GiB is free. Including non-PyTorch memory, this process has 92.07 GiB memory in use. Of the alloca
+  saved: /home/azureuser/megaslide/results/10_deepspeed/fsdp_cpu_33.3b.json
+  summary: params=None peak_gpu=91.4GB peak_host_ram=112.9GB avg_step=None oom=True
+[07:47:01] <<< END  scale=33.3b rc=0
+
+==== Phase 2 sweep finished at 2026-06-25T07:47:01Z ====
